@@ -5,7 +5,10 @@ import sys
 import subprocess
 import time
 
-import config
+PATH = os.path.abspath(os.path.dirname(__file__) + "/../")
+sys.path.append(PATH)
+
+from config import *
 
 if __name__=="__main__":
 
@@ -14,11 +17,11 @@ if __name__=="__main__":
     args = [ "-x", "1720",
              "-y", "0",
              "-w", "200",
-             "-h", str(config.HEIGHT),
+             "-h", str(HEIGHT),
              "-ta", "r",
-             "-bg", config.COLOR['BG'],
-             "-fg", config.COLOR['FG'],
-             "-fn", config.FONT ]
+             "-bg", COLOR['BG'],
+             "-fg", COLOR['FG'],
+             "-fn", FONT ]
 
     dzen = subprocess.Popen(['dzen2'] + args, stdin=subprocess.PIPE)
 

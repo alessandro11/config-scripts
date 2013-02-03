@@ -1,6 +1,6 @@
 import os
 
-PATH = os.path.abspath(os.path.dirname(__file__) + "/..")
+PATH = os.path.abspath(os.path.dirname(__file__))
 
 HEIGHT = 16
 

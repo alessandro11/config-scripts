@@ -8,6 +8,9 @@ from datetime import datetime
 import psutil
 import sensors
 
+PATH = os.path.abspath(os.path.dirname(__file__) + "/../")
+sys.path.append(PATH)
+
 from config import *
 
 CPUSENSOR = None
