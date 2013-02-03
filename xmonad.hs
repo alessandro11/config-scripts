@@ -17,6 +17,7 @@
 import XMonad
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run (spawnPipe)
 import Data.Monoid
 
@@ -43,8 +44,8 @@ main = do
         mouseBindings      = myMouseBindings,
 
         layoutHook         = myLayout,
-        manageHook         = myManageHook,
-        handleEventHook    = myEventHook,
+        manageHook         = myManageHook <+> manageDocks,
+        handleEventHook    = myEventHook <+> docksEventHook,
         logHook            = myLogHook workspacesBar,
         startupHook        = myStartupHook
     }
@@ -76,6 +77,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
 
+    , ((modm,               xK_b     ), sendMessage ToggleStruts)
+
     , ((modm              , xK_comma ), sendMessage (IncMasterN 1))
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
 
@@ -100,7 +103,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     ]
 
 
-myLayout = tiled ||| Mirror tiled ||| Full
+myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
   where
     tiled   = Tall nmaster delta ratio
     nmaster = 1
