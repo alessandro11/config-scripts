@@ -15,6 +15,7 @@
 
 
 import XMonad
+import XMonad.Hooks.EwmhDesktops
 import Data.Monoid
 import System.Exit
 
@@ -24,10 +25,7 @@ import qualified Data.Map        as M
 
 main :: IO ()
 main = do
-    xmonad defaults
-
-
-defaults = defaultConfig {
+    xmonad $ ewmh defaultConfig {
         terminal           = "urxvt",
         focusFollowsMouse  = True,
         borderWidth        = 1,
