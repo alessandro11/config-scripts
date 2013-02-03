@@ -16,7 +16,11 @@
 
 import XMonad
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.DynamicLog
+import XMonad.Util.Run (spawnPipe)
 import Data.Monoid
+
+import System.IO
 import System.Exit
 
 import qualified XMonad.StackSet as W
@@ -25,6 +29,7 @@ import qualified Data.Map        as M
 
 main :: IO ()
 main = do
+    workspacesBar <- spawnPipe "${HOME}/.config-scripts/dock/workspaces.py"
     xmonad $ ewmh defaultConfig {
         terminal           = "urxvt",
         focusFollowsMouse  = True,
@@ -40,7 +45,7 @@ main = do
         layoutHook         = myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
-        logHook            = myLogHook,
+        logHook            = myLogHook workspacesBar,
         startupHook        = myStartupHook
     }
 
@@ -114,7 +119,18 @@ myManageHook = composeAll
 myEventHook = mempty
 
 
-myLogHook = return ()
+myLogHook h = dynamicLogWithPP $ defaultPP
+    { ppOutput          = hPutStrLn h
+	, ppCurrent         = wrap ("^bg(#46a4ff) ") (" ^bg()")
+	, ppVisible         = wrap ("^bg(#353535) ") (" ^bg()")
+	, ppHidden          = wrap ("^fg(#dddddd) ") (" ^fg()")
+	, ppHiddenNoWindows = wrap ("^fg(#2f353b) ") (" ^fg()")
+    , ppUrgent          = wrap ("^bg(#ae4747) ") (" ^bg()")
+	, ppWsSep           = ""
+	, ppSep             = "^fg(#204a87)|^fg()"
+	, ppTitle           = wrap (" ") (" ")
+	, ppLayout          = wrap ("^fg(#46a4ff) ") (" ^fg()")
+	}
 
 
 myStartupHook = return ()
