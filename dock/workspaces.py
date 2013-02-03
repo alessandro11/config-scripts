@@ -8,17 +8,6 @@ import config
 
 if __name__=="__main__":
 
-    #f = open('/tmp/ws', 'w')
-
-    #while 1:
-    #    buf = raw_input()
-
-    #    if (not buf) or (buf == ''):
-    #        f.close()
-    #        sys.exit(0)
-
-    #    f.write(buf)
-
     args = [ "-x", "0",
              "-y", "0",
              "-w", "600",
