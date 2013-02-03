@@ -26,6 +26,5 @@ if __name__=="__main__":
     dzen = subprocess.Popen(['dzen2'] + args, stdin=subprocess.PIPE)
 
     while 1:
-        #dzen.stdin.write(dock.format_arrows())
-        dzen.stdin.write(time.strftime(fmt) + ' \n')
+        dzen.stdin.write(arrows() + time.strftime(fmt) + ' \n')
         time.sleep(1)
