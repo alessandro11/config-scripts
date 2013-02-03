@@ -57,7 +57,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm, XMonad.terminal = term}) = M.fromLi
     [ ((modm,               xK_Return), spawn $ term)
     , ((modm,               xK_BackSpace), spawn $ term ++ " -e ssh winterfell")
 
-    , ((modm,               xK_p     ), spawn "dmenu_run")
+    , ((modm,               xK_p     ), spawn "${HOME}/.config-scripts/run_dmenu.py")
 
     , ((modm .|. shiftMask, xK_c     ), kill)
 
