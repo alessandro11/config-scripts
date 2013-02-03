@@ -31,6 +31,8 @@ import qualified Data.Map        as M
 main :: IO ()
 main = do
     workspacesBar <- spawnPipe "${HOME}/.config-scripts/dock/workspaces.py"
+    sensorsBar <- spawn "${HOME}/.config-scripts/dock/sysinfo.py"
+    clockBar <- spawn "${HOME}/.config-scripts/dock/clock.py"
     xmonad $ ewmh defaultConfig {
         terminal           = "urxvt",
         focusFollowsMouse  = True,
