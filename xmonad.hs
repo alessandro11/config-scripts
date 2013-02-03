@@ -51,8 +51,9 @@ main = do
     }
 
 
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
-    [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
+myKeys conf@(XConfig {XMonad.modMask = modm, XMonad.terminal = term}) = M.fromList $
+    [ ((modm,               xK_Return), spawn $ term)
+    , ((modm,               xK_BackSpace), spawn $ term ++ " -e ssh winterfell")
 
     , ((modm,               xK_p     ), spawn "dmenu_run")
 
