@@ -15,9 +15,11 @@
 
 
 import XMonad
+import XMonad.Layout.NoBorders
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers
 import XMonad.Util.Run (spawnPipe)
 import Data.Monoid
 
@@ -106,7 +108,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     ]
 
 
-myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
+myLayout = avoidStruts $ smartBorders (tiled ||| Mirror tiled ||| Full)
   where
     tiled   = Tall nmaster delta ratio
     nmaster = 1
@@ -115,7 +117,9 @@ myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
 
 
 myManageHook = composeAll
-    [ className =? "MPlayer"             --> doFloat
+    [ isDialog                           --> doFloat
+    , isFullscreen                       --> doFullFloat
+    , className =? "MPlayer"             --> doFloat
     , className =? "XVroot"              --> doFloat
     , className =? "FLTK"                --> doFloat
     , className =? "processing-app-Base" --> doFloat
