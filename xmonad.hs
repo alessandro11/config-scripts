@@ -49,7 +49,7 @@ main = do
 
         layoutHook         = myLayout,
         manageHook         = myManageHook <+> manageDocks,
-        handleEventHook    = myEventHook <+> docksEventHook,
+        handleEventHook    = myEventHook <+> docksEventHook <+> fullscreenEventHook,
         logHook            = myLogHook workspacesBar,
         startupHook        = myStartupHook
     }
