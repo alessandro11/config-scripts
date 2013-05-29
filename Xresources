@@ -1,0 +1,81 @@
+! Xcursor --------------------------------------------------------------------
+
+!Xcursor*theme:  Vanilla-DMZ-AA
+!Xcursor.size:   22
+
+
+! terminal colors ------------------------------------------------------------
+
+*foreground:  #dddddd
+*background:  #121212
+! Black
+*color0:      #353535
+*color8:      #666666
+! Red
+*color1:      #ae4747
+*color9:      #ee6363
+! Green
+*color2:      #556b2f
+*color10:     #9acd32
+! Yellow
+*color3:      #daa520
+*color11:     #ffc123
+! Blue
+*color4:      #204a87
+*color12:     #3465a4
+! Mangenta
+*color5:      #ce5c00
+*color13:     #f57900
+! Cyan 
+*color6:      #89b6e2
+*color14:     #46a4ff
+! White
+*color7:      #dddddd
+*color15:     #ffffff
+
+
+! rxvt-unicode ---------------------------------------------------------------
+
+urxvt*font:               xft:MonteCarlo:pixelsize=13:antialias=true:hinting=true
+urxvt*transparent:        true
+urxvt*tintColor:          gray16
+urxvt*background:         #191919
+urxvt*internalBorder:     3
+urxvt*fading:             30
+urxvt*shading:            90
+urxvt*saveLines:          4096
+urxvt*scrollTtyKeypress:  true
+urxvt*scrollWithBuffer:   false
+urxvt*scrollTtyOutput:    false
+urxvt*scrollBar:          false
+urxvt*scrollstyle:        rxvt
+urxvt*scrollBar_right:    false
+urxvt*cursorColor:        #60a0c0
+urxvt*loginShell:         false
+urxvt*urlLauncher:        /usr/bin/google-chrome
+urxvt*matcher.button:     1
+
+
+! x11-ssh-askpass ------------------------------------------------------------
+
+x11-ssh-askpass*font:                   xft:MonteCarlo:pixelsize=13:antialias=true:hinting=true
+x11-ssh-askpass*background:             #141414
+x11-ssh-askpass*foreground:             #ffffff
+x11-ssh-askpass.Button*background:      #000000
+x11-ssh-askpass.Indicator*foreground:   #60a0c0
+x11-ssh-askpass.Indicator*background:   #090909
+x11-ssh-askpass*topShadowColor:         #000000
+x11-ssh-askpass*bottomShadowColor:      #000000
+x11-ssh-askpass.*borderWidth:           1
+
+! xlock ----------------------------------------------------------------------
+xlock.mode:               blank
+!xlock*font:                xft:MonteCarlo:pixelsize=13:antialias=true:hinting=true
+xlock*font:               -*-montecarlo-medium-r-normal-*-11-*-*-*-*-*-*-*
+xlock.background:         Black
+xlock.foreground:         White
+!xlock.username:           And you are? 
+!xlock.password:           And your problem is? 
+!xlock.info:               Which pa
+!xlock.validate:           *clickety-click*
+!xlock.invalid:            Thank you.  YOUR account has been deleted.
