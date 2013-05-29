@@ -1,5 +1,5 @@
 set nocompatible                " disable compatibility with vi (enables some vim features)
-set background=light            " set color scheme (for light or dark backgrounds)
+set background=dark             " set color scheme (for light or dark backgrounds)
 set backspace=indent,eol,start  " allow backspacing over everything in insert mode
 set nobackup                    " do not keep a backup file
 set history=50                  " keep 50 lines of command line history
