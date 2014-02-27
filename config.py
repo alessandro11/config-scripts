@@ -25,7 +25,8 @@ COLOR = { "BG": "#050505",
           "WHITE": "#dddddd",
           "WHITE2": "#ffffff" }
 
-FONT = "-*-montecarlo-medium-r-normal-*-11-*-*-*-*-*-*-*"
+FONT = "-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1" 
+# "-*-montecarlo-medium-r-normal-*-11-*-*-*-*-*-*-*"
 
 def arrows():
     return "^fg(#a488d9)>^fg(#007b8c)>^fg(#444444)>^fg() "

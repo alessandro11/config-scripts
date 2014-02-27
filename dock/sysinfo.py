@@ -19,9 +19,8 @@ class SysInfoDock:
 
         for chip in sensors.iter_detected_chips():
             for feature in chip:
-                if feature.label[:4] == 'temp':
-                    self.cpusensor = feature
-                    break
+                self.cpusensor = feature
+                break
 
         self.lastsent = None
         self.lastrecv = None
@@ -71,17 +70,22 @@ class SysInfoDock:
         ret += progress(int(mem), fg=COLOR['GREEN2'])
         ret += sep()
 
-        gputemp = self.get_gpu_temp()
-        ret += title("gpu")
-        if gputemp > 60:
-            ret += text("%dc" % gputemp, fg=COLOR['RED2'])
-        else:
-            ret += text("%dc" % gputemp)
-        ret += sep()
+#        gputemp = self.get_gpu_temp()
+#        ret += title("gpu")
+#        if gputemp > 60:
+#            ret += text("%dc" % gputemp, fg=COLOR['RED2'])
+#        else:
+#            ret += text("%dc" % gputemp)
+#        ret += sep()
 
         disk = psutil.disk_usage('/').percent
         ret += title("disk") + icon("fs_01", fg=COLOR['YELLOW'])
         ret += progress(int(disk), fg=COLOR['YELLOW'])
+        ret += sep()
+
+        disk_swap = psutil.swap_memory().percent
+        ret += title("swap") + icon("fs_01", fg=COLOR['YELLOW'])
+        ret += progress(int(disk_swap), fg=COLOR['YELLOW'])
         ret += sep()
 
         (downspeed, upspeed) = self.get_net_speed()
