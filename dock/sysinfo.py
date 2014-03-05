@@ -30,9 +30,9 @@ class SysInfoDock:
         self.re_uptime = re.compile('^ .* up (?P<uptime>.*),.+[0-9]+.+user,.+load average: (?P<load>.*)$')
 
     def run(self):
-        args = [ "-x", "500",
+        args = [ "-x", "520",
                  "-y", "0",
-                 "-w", "1120",
+                 "-w", "650",
                  "-h", str(HEIGHT),
                  "-ta", "l",
                  "-bg", COLOR['BG'],
