@@ -26,10 +26,11 @@ class SysInfoDock:
         self.lastrecv = None
         self.lasttimestamp = None
 
-        self.re_uptime = re.compile('^ .* up (?P<uptime>.*),  [0-9]* user,  load average: (?P<load>.*)$')
+        #self.re_uptime = re.compile('^ .* up (?P<uptime>.*),  [0-9]* user,  load average: (?P<load>.*)$')
+        self.re_uptime = re.compile('^ .* up (?P<uptime>.*),.+[0-9]+.+user,.+load average: (?P<load>.*)$')
 
     def run(self):
-        args = [ "-x", "600",
+        args = [ "-x", "500",
                  "-y", "0",
                  "-w", "1120",
                  "-h", str(HEIGHT),
@@ -83,11 +84,6 @@ class SysInfoDock:
         ret += progress(int(disk), fg=COLOR['YELLOW'])
         ret += sep()
 
-        disk_swap = psutil.swap_memory().percent
-        ret += title("swap") + icon("fs_01", fg=COLOR['YELLOW'])
-        ret += progress(int(disk_swap), fg=COLOR['YELLOW'])
-        ret += sep()
-
         (downspeed, upspeed) = self.get_net_speed()
         ret += title("net")
         ret += icon("net_down_03", fg=COLOR['GREEN2'])
@@ -118,7 +114,6 @@ class SysInfoDock:
 
     def get_uptime_and_load(self):
         res = self.re_uptime.match(subprocess.check_output(['uptime']))
-
         uptime = res.group('uptime')
         load = res.group('load').replace(',', '')
 
@@ -131,7 +126,7 @@ class SysInfoDock:
         return int(temp.strip())
 
     def get_net_speed(self):
-        eth0 = psutil.network_io_counters(pernic=True)['eth0']
+        eth0 = psutil.network_io_counters(pernic=True)['enp6s0']
         now = long(datetime.now().strftime('%s'))
         downspeed = 0.0
         upspeed = 0.0
