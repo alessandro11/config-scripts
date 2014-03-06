@@ -27,6 +27,7 @@ class SysInfoDock:
         self.lasttimestamp = None
 
         #self.re_uptime = re.compile('^ .* up (?P<uptime>.*),  [0-9]* user,  load average: (?P<load>.*)$')
+        self.re_uptime_min = re.compile('^ .* up (?P<uptime>[0-9]+ min),  [0-9]+ user.*,  load average: (?P<load>.*)$')
         self.re_uptime_hours = re.compile('^ .* up (?P<uptime>[0-9]+:[0-9]+),  [0-9]+ user.*,  load average: (?P<load>.*)$')
         self.re_uptime_days = re.compile('^ .* up (?P<uptime>[0-9]+ days,  [0-9]+:[0-9]+),  [0-9]+ user.*,  load average: (?P<load>.*)$')
 
@@ -115,9 +116,40 @@ class SysInfoDock:
 
     def get_uptime_and_load(self):
         str_uptime = subprocess.check_output(['uptime'])
-        res = self.re_uptime_hours.match(str_uptime)
+        res = self.re_uptime_min.match(str_uptime)
         if not res:
-            res = self.re_uptime_days.match(str_uptime)
+            res = self.re_uptime_hours.match(str_uptime)
+        if not res:
+             res = self.re_uptime_days.match(str_uptime)
+            
+        uptime = res.group('uptime')
+        load = res.group('load').replace(',', '')
+
+        return (uptime, load)
+
+    def get_gpu_temp(self):
+        res = subprocess.check_output(['nvidia-settings', '-q', 'gpucoretemp'])
+        temp = res.split('\n')[1].split(': ')[1].replace('.', '')
+
+        return int(temp.strip())
+
+    def get_net_speed(self):
+        eth0 = psutil.network_io_counters(pernic=True)['net0']
+        now = long(datetime.now().strftime('%s'))
+        downspeed = 0.0
+        upspeed = 0.0
+
+        if self.lasttimestamp:
+            downspeed = (eth0.bytes_recv - self.lastrecv) / (now - self.lasttimestamp) / 1024.0
+            upspeed = (eth0.bytes_sent - self.lastsent) / (now - self.lasttimestamp) / 1024.0
+
+        self.lastrecv = eth0.bytes_recv
+        self.lastsent = eth0.bytes_sent
+        self.lasttimestamp = now
+
+        return (downspeed, upspeed)
+
+
 
         uptime = res.group('uptime')
         load = res.group('load').replace(',', '')
@@ -131,7 +163,7 @@ class SysInfoDock:
         return int(temp.strip())
 
     def get_net_speed(self):
-        eth0 = psutil.network_io_counters(pernic=True)['enp6s0']
+        eth0 = psutil.network_io_counters(pernic=True)['net0']
         now = long(datetime.now().strftime('%s'))
         downspeed = 0.0
         upspeed = 0.0
