@@ -2,7 +2,7 @@ import os
 
 PATH = os.path.abspath(os.path.dirname(__file__))
 
-HEIGHT = 16
+HEIGHT = 12
 
 COLOR = { "BG": "#050505",
           "FG": "#cccccc",
