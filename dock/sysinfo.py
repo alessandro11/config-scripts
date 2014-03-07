@@ -27,7 +27,7 @@ class SysInfoDock:
         self.lasttimestamp = None
 
         #self.re_uptime = re.compile('^ .* up (?P<uptime>.*),  [0-9]* user,  load average: (?P<load>.*)$')
-        self.re_uptime_min = re.compile('^ .* up (?P<uptime> [0-9]+ min),  [0-9]+ user.*,  load average: (?P<load>.*)$')
+        self.re_uptime_min = re.compile('^ .* up (?P<uptime>[0-9]+ min),  [0-9]+ user.*,  load average: (?P<load>.*)$')
         self.re_uptime_hours = re.compile('^ .* up (?P<uptime> [0-9]+:[0-9]+),  [0-9]+ user.*,  load average: (?P<load>.*)$')
         self.re_uptime_days = re.compile('^ .* up (?P<uptime> [0-9]+ days,  [0-9]+:[0-9]+),  [0-9]+ user.*,  load average: (?P<load>.*)$')
 
@@ -116,15 +116,11 @@ class SysInfoDock:
 
     def get_uptime_and_load(self):
         str_uptime = subprocess.check_output(['uptime'])
-        print 'uptime: ', str_uptime
         res = self.re_uptime_min.match(str_uptime)
-        print 'min: ', res
         if not res:
             res = self.re_uptime_hours.match(str_uptime)
-            print 'hours: ', res
         if not res:
             res = self.re_uptime_days.match(str_uptime)
-            print 'days: ', res
         uptime = res.group('uptime')
         load = res.group('load').replace(',', '')
 
