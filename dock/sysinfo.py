@@ -25,16 +25,14 @@ class SysInfoDock:
         self.lastsent = None
         self.lastrecv = None
         self.lasttimestamp = None
-
-        #self.re_uptime = re.compile('^ .* up (?P<uptime>.*),  [0-9]* user,  load average: (?P<load>.*)$')
-        self.re_uptime_min = re.compile('^ .* up (?P<uptime>[0-9]+ min),  [0-9]+ user.*,  load average: (?P<load>.*)$')
-        self.re_uptime_hours = re.compile('^ .* up (?P<uptime> [0-9]+:[0-9]+),  [0-9]+ user.*,  load average: (?P<load>.*)$')
-        self.re_uptime_days = re.compile('^ .* up (?P<uptime> [0-9]+ days,  [0-9]+:[0-9]+),  [0-9]+ user.*,  load average: (?P<load>.*)$')
+        self.blink_batt = True
+        self.refresh_batt_left_in = 0
+        self.time_batt_remaining = 0
 
     def run(self):
-        args = [ "-x", "510",
+        args = [ "-x", DOCK_POS['SIx'],
                  "-y", "0",
-                 "-w", "660",
+                 "-w", DOCK_POS['SIw'],
                  "-h", str(HEIGHT),
                  "-ta", "l",
                  "-bg", COLOR['BG'],
@@ -49,11 +47,15 @@ class SysInfoDock:
 
     def get_data(self):
         ret = " "
+        
+        ret += sep()
+        ret += self.get_caps_lock()
+        ret += sep()
 
         cpu = psutil.cpu_percent(interval=0)
         cpufreq = self.get_cpu_freq()
         cputemp = self.get_cpu_temp()
-        ret += title("cpu") + icon("cpu", fg=COLOR['MAGENTA2'])
+        ret += icon("cpu", fg=COLOR['MAGENTA2'])
         ret += text("%.2fGHz " % cpufreq)
         ret += progress(int(cpu), fg=COLOR['MAGENTA'])
         if cputemp > 60:
@@ -65,12 +67,12 @@ class SysInfoDock:
         (uptime, load) = self.get_uptime_and_load()
         ret += title("load") + text("%s" % load)
         ret += sep()
-        ret += title("uptime") + text("%s" % uptime)
+        ret += title("up") + text("%s" % uptime)
         ret += sep()
 
         mem = psutil.virtual_memory().percent
-        ret += title("mem") + icon("mem", fg=COLOR['GREEN2'])
-        ret += progress(int(mem), fg=COLOR['GREEN2'])
+        ret += icon("mem", fg=COLOR['GREEN'])
+        ret += progress(int(mem), fg=COLOR['GREEN'])
         ret += sep()
 
 #        gputemp = self.get_gpu_temp()
@@ -81,19 +83,49 @@ class SysInfoDock:
 #            ret += text("%dc" % gputemp)
 #        ret += sep()
 
-        disk = psutil.disk_usage('/').percent
-        ret += title("disk") + icon("fs_01", fg=COLOR['YELLOW'])
-        ret += progress(int(disk), fg=COLOR['YELLOW'])
-        ret += sep()
+        if BATT_PLUGGED:
+            ret += self.get_batt_status()
+        else:
+            disk = psutil.disk_usage('/').percent
+            ret += icon("fs_01", fg=COLOR['YELLOW'])
+            ret += progress(int(disk), fg=COLOR['YELLOW'])
 
-        (downspeed, upspeed) = self.get_net_speed()
-        ret += title("net")
-        ret += icon("net_down_03", fg=COLOR['GREEN2'])
-        ret += text("%.1f " % downspeed)
-        ret += icon("net_up_03", fg=COLOR['RED2'])
-        ret += text("%.1f " % upspeed)
+        self.iface = subprocess.check_output(['eth-up.sh'])[:-1]
+        if self.iface != "":
+            ret += sep()
+            (downspeed, upspeed) = self.get_net_speed()
+            if self.iface == "net0":
+                icon_name = "net_wired"
+            elif self.iface == "wifi0":
+                icon_name = "wifi_02"
+            else:
+                icon_name = "net-wired2"
+
+            if downspeed > 0.0 or upspeed > 0.0:
+                icon_color = COLOR['GREEN']
+            else:
+                icon_color = COLOR['GREY']
+
+            ret += icon(icon_name, icon_color)
+            ret += icon("net_down_03", fg=COLOR['GREEN2'])
+            ret += text("%.1f " % downspeed)
+            ret += icon("net_up_03", fg=COLOR['RED2'])
+            ret += text("%.1f " % upspeed)
 
         return ret
+
+    def get_caps_lock(self):
+        caps = subprocess.check_output(['xset', 'q'])
+        caps = caps[caps.find('Caps Lock')+len('Caps Lock:'):].lstrip()
+        caps = caps[:caps.find(' ')]
+        ret = ''
+        if caps == 'off':
+            ret = title('caps')
+        else:
+            ret = text('CAPS', COLOR['GREEN'])
+
+        return ret
+
     def get_cpu_freq(self):
         try:
             cpuinfo = open('/proc/cpuinfo', 'r')
@@ -116,15 +148,12 @@ class SysInfoDock:
 
     def get_uptime_and_load(self):
         str_uptime = subprocess.check_output(['uptime'])
-        res = self.re_uptime_min.match(str_uptime)
-        if not res:
-            res = self.re_uptime_hours.match(str_uptime)
-        if not res:
-            res = self.re_uptime_days.match(str_uptime)
-        uptime = res.group('uptime')
-        load = res.group('load').replace(',', '')
-
-        return (uptime, load)
+        tmp = str_uptime[str_uptime.find('up')+3:]
+        tmp = tmp[:tmp.find('user')]
+        uptime = tmp[:tmp.rfind(',')]
+        tmp = str_uptime[str_uptime.rfind('average:'):-1].split(',')
+        load = tmp[1] + ',' + tmp[3] + ',' + tmp[5]
+        return(uptime, load)
 
     def get_gpu_temp(self):
         res = subprocess.check_output(['nvidia-settings', '-q', 'gpucoretemp'])
@@ -133,18 +162,22 @@ class SysInfoDock:
         return int(temp.strip())
 
     def get_net_speed(self):
-        eth0 = psutil.network_io_counters(pernic=True)['net0']
-        now = long(datetime.now().strftime('%s'))
         downspeed = 0.0
         upspeed = 0.0
+        net = psutil.network_io_counters(pernic=True)[self.iface]
+        now = long(datetime.now().strftime('%s'))
 
-        if self.lasttimestamp:
-            downspeed = (eth0.bytes_recv - self.lastrecv) / (now - self.lasttimestamp) / 1024.0
-            upspeed = (eth0.bytes_sent - self.lastsent) / (now - self.lasttimestamp) / 1024.0
+        try:
+            if self.lasttimestamp:
+                downspeed = (net.bytes_recv - self.lastrecv) / (now - self.lasttimestamp) / 1024.0
+                upspeed = (net.bytes_sent - self.lastsent) / (now - self.lasttimestamp) / 1024.0
 
-        self.lastrecv = eth0.bytes_recv
-        self.lastsent = eth0.bytes_sent
-        self.lasttimestamp = now
+            self.lastrecv = net.bytes_recv
+            self.lastsent = net.bytes_sent
+            self.lasttimestamp = now
+        except:
+            downspeed = 0.0
+            upspeed = 0.0
 
         return (downspeed, upspeed)
 
@@ -161,21 +194,39 @@ class SysInfoDock:
 
         return int(temp.strip())
 
-    def get_net_speed(self):
-        eth0 = psutil.network_io_counters(pernic=True)['net0']
-        now = long(datetime.now().strftime('%s'))
-        downspeed = 0.0
-        upspeed = 0.0
-
-        if self.lasttimestamp:
-            downspeed = (eth0.bytes_recv - self.lastrecv) / (now - self.lasttimestamp) / 1024.0
-            upspeed = (eth0.bytes_sent - self.lastsent) / (now - self.lasttimestamp) / 1024.0
-
-        self.lastrecv = eth0.bytes_recv
-        self.lastsent = eth0.bytes_sent
-        self.lasttimestamp = now
-
-        return (downspeed, upspeed)
+    def get_batt_status(self):
+        #str_battery = "Battery 0: Discharging, 5%, 5 remaining"
+        str_battery=subprocess.check_output(['acpi', '-b'])
+        ret = ""
+        if str_battery != "":
+            str_battery = str_battery.split(',')
+            tmp = str_battery[1].rstrip()
+            tmp = tmp[:tmp.find('%')]
+            battery = int(tmp)
+            if len(str_battery) > 2:
+                str_battery = str_battery[2].split(' ')
+            else:
+                str_battery[1] = ""
+            if battery > 15:
+                ret += icon("bat_full_01", fg=COLOR['BLUE'])
+                ret += progress(int(battery), fg=COLOR['BLUE'])
+            elif battery > 8:
+                ret += icon("bat_low_01", fg=COLOR['YELLOW'])
+                ret += progress(int(battery), fg=COLOR['YELLOW'])
+            else:
+                if self.blink_batt:
+                    ret += icon("bat_empty_01", fg=COLOR['RED'])
+                else:
+                    ret += '   '
+                self.blink_batt = not self.blink_batt    
+                ret += progress(int(battery), fg=COLOR['RED'])
+ 
+            if self.refresh_batt_left_in == 0:
+                self.time_batt_remaining = str_battery[1]
+            ret += self.time_batt_remaining
+            self.refresh_batt_left_in = (self.refresh_batt_left_in + 1) % 10
+            
+        return ret
 
 
 if __name__=="__main__":

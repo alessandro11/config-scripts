@@ -12,11 +12,11 @@ from config import *
 
 if __name__=="__main__":
 
-    fmt = '%d^fg(#444).^fg()%m^fg(#444).^fg()%Y^fg(#007b8c)/^fg(#5f656b)%a ^fg(#a488d9)| ^fg()%H^fg(#444):^fg()%M^fg(#444):^fg()%S'
+    fmt = '%d^fg(#444).^fg()%m^fg(#444).^fg()%y^fg(#007b8c)/^fg(#5f656b)%a ^fg(#a488d9)| ^fg()%H^fg(#444):^fg()%M^fg(#444):^fg()%S'
 
-    args = [ "-x", "1150",
+    args = [ "-x", DOCK_POS['CLx'],
              "-y", "0",
-             "-w", "220",
+             "-w", DOCK_POS['CLw'],
              "-h", str(HEIGHT),
              "-ta", "r",
              "-bg", COLOR['BG'],

@@ -1,8 +1,10 @@
 import os
+from subprocess import check_output
+
 
 PATH = os.path.abspath(os.path.dirname(__file__))
 
-HEIGHT = 12
+HEIGHT = 16
 
 COLOR = { "BG": "#050505",
           "FG": "#cccccc",
@@ -12,8 +14,9 @@ COLOR = { "BG": "#050505",
           "BLACK2": "#666666",
           "RED": "#ae4747",
           "RED2": "#ee6363",
-          "GREEN": "#556b2f",
-          "GREEN2": "#9acd32",
+          "GREEN": "#00FF00",
+          "GREEN2": "#556b2f",
+          "GREEN3": "#9acd32",
           "YELLOW": "#daa520",
           "YELLOW2": "#ffc123",
           "BLUE": "#204a87",
@@ -24,9 +27,28 @@ COLOR = { "BG": "#050505",
           "CYAN2": "#46a4ff",
           "WHITE": "#dddddd",
           "WHITE2": "#ffffff" }
+# WS = workspace
+# SI = sysinfo
+# CL = clock
+DOCK_POS = { "WSw": "490",
+            "SIx": "490",
+            "SIw": "686",
+            "CLx": "1176",
+            "CLw": "190" }
 
 #FONT = "-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1" 
-FONT = "-*-montecarlo-medium-r-normal-*-11-*-*-*-*-*-*-*"
+#FONT = "-*-montecarlo-medium-r-normal-*-11-*-*-*-*-*-*-*"
+FONT = "xft:DejaVu Sans Mono:style=Normal:pixelsize=12:antialias=true:hinting=true"
+
+
+def is_batt_plugged():
+    return check_output(['acpi', '-b']) != ''
+BATT_PLUGGED=is_batt_plugged()
+if BATT_PLUGGED:
+    DOCK_POS['WSw'] = "440"
+    DOCK_POS['SIx'] = "440"
+    DOCK_POS['SIw'] = "736"
+
 
 def arrows():
     return "^fg(#a488d9)>^fg(#007b8c)>^fg(#444444)>^fg() "

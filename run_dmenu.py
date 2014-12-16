@@ -12,9 +12,9 @@ if __name__=="__main__":
 
     args = [ "-fn", FONT,
              "-nb", COLOR['BG'],
-             "-nf", COLOR['FG'],
-             "-sb", COLOR['BLACK'],
-             "-sf", COLOR['CYAN'] ]
+             "-nf", COLOR['GREEN'],
+             "-sb", COLOR['GREEN'],
+             "-sf", COLOR['BLACK'] ]
 
     dmenu = subprocess.Popen(['dmenu_run'] + args)
     dmenu.wait()

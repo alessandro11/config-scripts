@@ -13,7 +13,7 @@ if __name__=="__main__":
 
     args = [ "-x", "0",
              "-y", "0",
-             "-w", "600",
+             "-w", DOCK_POS['WSw'],
              "-h", str(HEIGHT),
              "-ta", "l",
              "-bg", COLOR['BG'],
