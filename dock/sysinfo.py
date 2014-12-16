@@ -101,15 +101,20 @@ class SysInfoDock:
             else:
                 icon_name = "net-wired2"
 
+            icon_color = COLOR['GREY']
+            icon_color_down = COLOR['GREEN2']
+            icon_color_up = COLOR['RED2']
             if downspeed > 0.0 or upspeed > 0.0:
                 icon_color = COLOR['GREEN']
-            else:
-                icon_color = COLOR['GREY']
+                if downspeed > 0.0:
+                    icon_color_down = COLOR['GREEN']
+                if upspeed > 0.0:
+                    icon_color_up = COLOR['RED']
 
             ret += icon(icon_name, icon_color)
-            ret += icon("net_down_03", fg=COLOR['GREEN2'])
+            ret += icon("net_down_03", fg=icon_color_down)
             ret += text("%.1f " % downspeed)
-            ret += icon("net_up_03", fg=COLOR['RED2'])
+            ret += icon("net_up_03", fg=icon_color_up)
             ret += text("%.1f " % upspeed)
 
         return ret
