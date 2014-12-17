@@ -59,7 +59,7 @@ class SysInfoDock:
         ret += text("%.2fGHz " % cpufreq)
         ret += progress(int(cpu), fg=COLOR['MAGENTA'])
         if cputemp > 60:
-            ret += text("%dc" % int(cputemp), fg=COLOR['RED2'])
+            ret += text("%dc" % int(cputemp), fg=COLOR['RED'])
         else:
             ret += text("%dc" % int(cputemp))
         ret += sep()
