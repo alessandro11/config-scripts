@@ -94,9 +94,9 @@ class SysInfoDock:
         if self.iface != "":
             ret += sep()
             (downspeed, upspeed) = self.get_net_speed()
-            if self.iface == "net0":
+            if self.iface == "eth0":
                 icon_name = "net_wired"
-            elif self.iface == "wifi0":
+            elif self.iface == "wlan0":
                 icon_name = "wifi_02"
             else:
                 icon_name = "net-wired2"
@@ -133,15 +133,8 @@ class SysInfoDock:
 
     def get_cpu_freq(self):
         try:
-            cpuinfo = open('/proc/cpuinfo', 'r')
-            for l in cpuinfo.readlines():
-                if l[:7] == 'cpu MHz':
-                    cpufreq = float(l.split(':')[1].strip())
-                    break
+            return float(subprocess.check_output(['get_cpus_freq.sh']))
 
-            cpuinfo.close()
-
-            return cpufreq / 1000
         except:
             return 0.0
 
