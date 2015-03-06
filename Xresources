@@ -197,5 +197,6 @@ Evince*font:  xft:DejaVu Sans Mono:style=Normal:pixelsize=11:antialias=true:hint
 ! **************************************************************
 ! unetbootin
 ! **************************************************************
-UNetbootin*foreground:  black
-UNetbootin.background:  grey
+!UNetbootin*foreground:  black
+!UNetbootin*background:  grey
+UNetbootin*font:  xft:DejaVu Sans Mono:style=Normal:pixelsize=11:antialias=true:hinting=true
