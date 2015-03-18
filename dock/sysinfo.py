@@ -28,6 +28,7 @@ class SysInfoDock:
         self.blink_batt = True
         self.refresh_batt_left_in = 0
         self.time_batt_remaining = 0
+        self.re_cpufreq = re.compile('^cpu .*(?P<tst> \d+\.\d*)$', re.M|re.I)
 
     def run(self):
         args = [ "-x", DOCK_POS['SIx'],
@@ -133,7 +134,17 @@ class SysInfoDock:
 
     def get_cpu_freq(self):
         try:
-            return float(subprocess.check_output(['get_cpus_freq.sh']))
+            fd_cpuinfo = open('/proc/cpuinfo', 'r')
+            buff = fd_cpuinfo.read()
+            fd_cpuinfo.close()
+            cpufreqs = self.re_cpufreq.findall(buff)
+            sum_freq = 0.0
+            count = 0
+            for freq in cpufreqs :
+                sum_freq = sum_freq + float(freq.strip())
+                count = count + 1
+
+            return (sum_freq / count) / 1000
 
         except:
             return 0.0
