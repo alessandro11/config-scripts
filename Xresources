@@ -166,7 +166,7 @@ xlock.mode:             blank
 ! XTERM
 ! **************************************************************
 !xterm*VT100.geometry:   80x25
-xterm*faceName:         DejaVu Sans Mono:pixelsize=11
+xterm*faceName:         DejaVu Sans Mono:pixelsize=12
 xterm*dynamicColors:    true
 xterm*utf8:             2
 xterm*eightBitInput:    true
@@ -199,4 +199,4 @@ Evince*font:  xft:DejaVu Sans Mono:style=Normal:pixelsize=11:antialias=true:hint
 ! **************************************************************
 !UNetbootin*foreground:  black
 !UNetbootin*background:  grey
-UNetbootin*font:  xft:DejaVu Sans Mono:style=Normal:pixelsize=11:antialias=true:hinting=true
+UNetbootin*font:  xft:DejaVu Sans Mono:style=Normal:pixelsize=12:antialias=true:hinting=true
