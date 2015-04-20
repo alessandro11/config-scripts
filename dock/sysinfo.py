@@ -66,7 +66,7 @@ class SysInfoDock:
         ret += sep()
 
         (uptime, load) = self.get_uptime_and_load()
-        ret += title("load") + text("%s" % load)
+        ret += title("ld") + text("%s" % load)
         ret += sep()
         ret += title("up") + text("%s" % uptime)
         ret += sep()
@@ -160,8 +160,8 @@ class SysInfoDock:
         tmp = str_uptime[str_uptime.find('up')+3:]
         tmp = tmp[:tmp.find('user')]
         uptime = tmp[:tmp.rfind(',')]
-        tmp = str_uptime[str_uptime.rfind('average:'):-1].split(',')
-        load = tmp[1] + ',' + tmp[3] + ',' + tmp[5]
+        tmp = str_uptime[str_uptime.rfind('average:'):-1].split(' ')
+        load = tmp[1][:-1] + ' ' + tmp[2][:-1] + ' ' + tmp[3]
         return(uptime, load)
 
     def get_gpu_temp(self):
