@@ -1,10 +1,12 @@
 import os
-from subprocess import check_output
+import os.path
+#from subprocess import check_output
+
 
 
 PATH = os.path.abspath(os.path.dirname(__file__))
 
-HEIGHT = 16
+HEIGHT = 18
 
 COLOR = { "BG": "#050505",
           "FG": "#cccccc",
@@ -38,17 +40,18 @@ DOCK_POS = { "WSw": "490",
 
 #FONT = "-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1" 
 #FONT = "-*-montecarlo-medium-r-normal-*-11-*-*-*-*-*-*-*"
-FONT = "xft:DejaVu Sans Mono:style=Normal:pixelsize=12:antialias=true:hinting=true"
+FONT = "xft:DejaVu Sans Mono:style=Normal:pixelsize=14:antialias=true:hinting=true"
 
 
 def is_batt_plugged():
-    return check_output(['acpi', '-b']) != ''
+    #return check_output(['acpi', '-b']) != ''
+    return os.path.isfile('/sys/class/power_supply/BAT0')
+
 BATT_PLUGGED=is_batt_plugged()
 if BATT_PLUGGED:
     DOCK_POS['WSw'] = "440"
     DOCK_POS['SIx'] = "440"
     DOCK_POS['SIw'] = "736"
-
 
 def arrows():
     return "^fg(#a488d9)>^fg(#007b8c)>^fg(#444444)>^fg() "
