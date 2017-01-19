@@ -8,6 +8,7 @@ from datetime import datetime
 import psutil
 import sensors
 import re
+import netifaces
 
 class SysInfoDock:
 
@@ -91,7 +92,9 @@ class SysInfoDock:
             ret += icon("fs_01", fg=COLOR['YELLOW'])
             ret += progress(int(disk), fg=COLOR['YELLOW'])
 
-        self.iface = subprocess.check_output(['eth-up.sh'])[:-1]
+        
+        self.iface = netifaces.gateways()['default'][netifaces.AF_INET][1]
+        print self.iface
         if self.iface != "":
             ret += sep()
             (downspeed, upspeed) = self.get_net_speed()
