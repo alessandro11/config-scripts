@@ -23,8 +23,8 @@ class SysInfoDock:
                 self.cpusensor = feature
                 break
 
-        self.lastsent = None
-        self.lastrecv = None
+        self.lastsent = 0
+        self.lastrecv = 0
         self.lasttimestamp = None
         self.blink_batt = True
         self.refresh_batt_left_in = 0
@@ -94,10 +94,9 @@ class SysInfoDock:
 
         
         self.iface = netifaces.gateways()['default'][netifaces.AF_INET][1]
-        print self.iface
         if self.iface != "":
             ret += sep()
-            (downspeed, upspeed) = self.get_net_speed()
+            (downspeed, down_unit, upspeed, up_unit) = self.get_net_speed()
             if self.iface == "eth0":
                 icon_name = "net_wired"
             elif self.iface == "wlan0":
@@ -117,9 +116,9 @@ class SysInfoDock:
 
             ret += icon(icon_name, icon_color)
             ret += icon("net_down_03", fg=icon_color_down)
-            ret += text("%.1f " % downspeed)
+            ret += text("%.1f%s " % (downspeed, down_unit))
             ret += icon("net_up_03", fg=icon_color_up)
-            ret += text("%.1f " % upspeed)
+            ret += text("%.1f%s " % (upspeed, up_unit))
 
         return ret
 
@@ -176,13 +175,37 @@ class SysInfoDock:
     def get_net_speed(self):
         downspeed = 0.0
         upspeed = 0.0
-        net = psutil.network_io_counters(pernic=True)[self.iface]
+        net = psutil.network_io_counters(pernic=True)[self.iface]        
         now = long(datetime.now().strftime('%s'))
 
         try:
-            if self.lasttimestamp:
-                downspeed = (net.bytes_recv - self.lastrecv) / (now - self.lasttimestamp) / 1024.0
-                upspeed = (net.bytes_sent - self.lastsent) / (now - self.lasttimestamp) / 1024.0
+            if self.lasttimestamp is not None:
+                downspeed = (net.bytes_recv - self.lastrecv) / (now - self.lasttimestamp)
+                upspeed = (net.bytes_sent - self.lastsent) / (now - self.lasttimestamp)
+
+            if downspeed < 1024:
+                down_unit = 'B'
+            elif downspeed < 1048576:
+                down_unit = 'KB'
+                downspeed = downspeed / 1024.0
+            elif downspeed < 1073741824:
+                down_unit = 'MB'
+                downspeed = downspeed / 1048576.0
+            else:
+                down_unit = 'GB'
+                downspeed = downspeed / 1073741824.0
+
+            if upspeed < 1024:
+                up_unit = 'B'
+            elif upspeed < 1048576:
+                up_unit = 'KB'
+                upspeed = upspeed / 1024.0
+            elif upspeed < 1073741824:
+                up_unit = 'MB'
+                upspeed = upspeed / 1048576.0
+            else:
+                up_unit = 'GB'
+                upspeed = upspeed / 1073741824.0
 
             self.lastrecv = net.bytes_recv
             self.lastsent = net.bytes_sent
@@ -190,9 +213,10 @@ class SysInfoDock:
         except:
             downspeed = 0.0
             upspeed = 0.0
+            down_unit = ""
+            up_unit = ""
 
-        return (downspeed, upspeed)
-
+        return (downspeed, down_unit, upspeed, up_unit)
 
 
         uptime = res.group('uptime')
