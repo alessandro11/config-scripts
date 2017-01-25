@@ -33,10 +33,10 @@ COLOR = { "BG": "#050505",
 # SI = sysinfo
 # CL = clock
 DOCK_POS = { "WSw": "490",
-            "SIx": "490",
-            "SIw": "686",
-            "CLx": "1176",
-            "CLw": "190" }
+            "SIx": "600",
+            "SIw": "780",
+            "CLx": "3120",
+            "CLw": "240" }
 
 #FONT = "-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1" 
 #FONT = "-*-montecarlo-medium-r-normal-*-11-*-*-*-*-*-*-*"
