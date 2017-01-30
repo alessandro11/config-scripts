@@ -9,7 +9,6 @@ import psutil
 import sensors
 import re
 import netifaces
-import alsaaudio
 
 class SysInfoDock:
 
@@ -54,8 +53,6 @@ class SysInfoDock:
         ret += sep()
         ret += self.get_caps_lock()
         ret += sep()
-	ret += self.get_vol()
-	ret += sep()
 
         cpu = psutil.cpu_percent(interval=0)
         cpufreq = self.get_cpu_freq()
@@ -136,12 +133,6 @@ class SysInfoDock:
             ret = text('CAPS', COLOR['GREEN'])
 
         return ret
-
-    def get_vol(self):
-	m = alsaaudio.Mixer()
-	vol = m.getvolume()
-	return str(vol[0])
-
 
     def get_cpu_freq(self):
         try:
