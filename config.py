@@ -6,7 +6,7 @@ import os.path
 
 PATH = os.path.abspath(os.path.dirname(__file__))
 
-HEIGHT = 18
+HEIGHT = 16
 
 COLOR = { "BG": "#050505",
           "FG": "#cccccc",
@@ -33,14 +33,14 @@ COLOR = { "BG": "#050505",
 # SI = sysinfo
 # CL = clock
 DOCK_POS = { "WSw": "490",
-            "SIx": "600",
+            "SIx": "620",
             "SIw": "780",
-            "CLx": "3120",
+            "CLx": "2492",
             "CLw": "240" }
 
 #FONT = "-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1" 
 #FONT = "-*-montecarlo-medium-r-normal-*-11-*-*-*-*-*-*-*"
-FONT = "xft:DejaVu Sans Mono:style=Normal:pixelsize=14:antialias=true:hinting=true"
+FONT = "xft:DejaVu Sans Mono:style=Normal:pixelsize=12:antialias=true:hinting=true"
 
 
 def is_batt_plugged():
