@@ -97,9 +97,9 @@ class SysInfoDock:
         if self.iface != "":
             ret += sep()
             (downspeed, down_unit, upspeed, up_unit) = self.get_net_speed()
-            if self.iface == "eth0":
+            if self.iface == "enp6s0":
                 icon_name = "net_wired"
-            elif self.iface == "wlan0":
+            elif self.iface == "wlp3s0":
                 icon_name = "wifi_02"
             else:
                 icon_name = "net-wired2"
@@ -175,7 +175,7 @@ class SysInfoDock:
     def get_net_speed(self):
         downspeed = 0.0
         upspeed = 0.0
-        net = psutil.network_io_counters(pernic=True)[self.iface]        
+        net = psutil.net_io_counters(pernic=True)[self.iface]        
         now = long(datetime.now().strftime('%s'))
 
         try:
