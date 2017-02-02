@@ -93,8 +93,9 @@ class SysInfoDock:
             ret += progress(int(disk), fg=COLOR['YELLOW'])
 
         
-        self.iface = netifaces.gateways()['default'][netifaces.AF_INET][1]
-        if self.iface != "":
+        self.iface = netifaces.gateways()['default']
+        if len(self.iface) > 0:
+            self.iface = self.iface[netifaces.AF_INET][1]
             ret += sep()
             (downspeed, down_unit, upspeed, up_unit) = self.get_net_speed()
             if self.iface == "enp6s0":
