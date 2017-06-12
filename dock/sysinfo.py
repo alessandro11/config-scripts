@@ -34,7 +34,7 @@ class SysInfoDock:
 
     def run(self):
         args = [ "-x", DOCK_POS['SIx'],
-                 "-y", "0",
+                 "-y", "780",
                  "-w", DOCK_POS['SIw'],
                  "-h", str(HEIGHT),
                  "-ta", "l",
@@ -184,7 +184,7 @@ class SysInfoDock:
     def get_net_speed(self):
         downspeed = 0.0
         upspeed = 0.0
-        net = psutil.network_io_counters(pernic=True)[self.iface]        
+        net = psutil.net_io_counters(pernic=True)[self.iface]        
         now = long(datetime.now().strftime('%s'))
 
         try:
