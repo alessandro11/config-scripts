@@ -1,5 +1,5 @@
 import os
-import os.path
+from os.path import exists
 #from subprocess import check_output
 
 
@@ -33,19 +33,25 @@ COLOR = { "BG": "#050505",
 # SI = sysinfo
 # CL = clock
 DOCK_POS = { "WSw": "490",
-            "SIx": "620",
-            "SIw": "740",
-            "CLx": "2492",
+            "SIx": "530",
+            "SIw": "650",
+            "CLx": "1150",
             "CLw": "240" }
+
+#DOCK_POS = { "WSw": "490",
+#            "SIx": "620",
+#            "SIw": "740",
+#            "CLx": "2492",
+#            "CLw": "240" }
 
 #FONT = "-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1" 
 #FONT = "-*-montecarlo-medium-r-normal-*-11-*-*-*-*-*-*-*"
-FONT = "xft:DejaVu Sans Mono:style=Normal:pixelsize=12:antialias=true:hinting=true"
+FONT = "xft:DejaVu Sans Mono:style=Normal:pixelsize=13:antialias=true:hinting=true:hintstyle=hintslight"
 
 
 def is_batt_plugged():
     #return check_output(['acpi', '-b']) != ''
-    return os.path.isfile('/sys/class/power_supply/BAT0')
+    return exists('/sys/class/power_supply/BAT0')
 
 BATT_PLUGGED=is_batt_plugged()
 if BATT_PLUGGED:
