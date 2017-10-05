@@ -153,10 +153,12 @@ class SysInfoDock:
             return 0.0
 
     def get_cpu_temp(self):
-        if self.cpusensor:
-            return self.cpusensor.get_value()
-        else:
-            return 0.0
+        t=psutil.sensors_temperatures()['coretemp']
+        return (t[0][1] + t[1][1]) / 2.0
+        #if self.cpusensor:
+        #    return self.cpusensor.get_value()
+        #else:
+        #    return 0.0
 
     def get_uptime_and_load(self):
         str_uptime = subprocess.check_output(['uptime'])
