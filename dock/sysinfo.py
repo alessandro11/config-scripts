@@ -53,9 +53,9 @@ class SysInfoDock:
         ret += text("%.2fGHz " % cpufreq)
         ret += progress(int(cpu), fg=COLOR['MAGENTA'])
         if cputemp > 60:
-            ret += text("%dc" % int(cputemp), fg=COLOR['RED'])
+            ret += text("%dC" % int(cputemp), fg=COLOR['RED'])
         else:
-            ret += text("%dc" % int(cputemp))
+            ret += text("%dC" % int(cputemp))
         ret += sep()
 
         (uptime, load) = self.get_uptime_and_load()
@@ -244,7 +244,7 @@ class SysInfoDock:
                 if self.blink_batt:
                     ret += icon("bat_empty_01", fg=COLOR['RED'])
                 else:
-                    ret += '   '
+                    ret += icon("bat_empty_01", fg=COLOR['BLACK'])
                 self.blink_batt = not self.blink_batt    
                 ret += progress(int(battery), fg=COLOR['RED'])
  
