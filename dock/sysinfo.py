@@ -6,7 +6,6 @@ import subprocess
 import time
 from datetime import datetime
 import psutil
-import sensors
 import re
 import netifaces
 
@@ -15,13 +14,6 @@ class SysInfoDock:
     def __init__(self):
         if not 'FONT' in globals():
             raise Exception('Config not loaded, missing \'from config import *\'?')
-
-        sensors.init()
-
-        for chip in sensors.iter_detected_chips():
-            for feature in chip:
-                self.cpusensor = feature
-                break
 
         self.lastsent = 0
         self.lastrecv = 0
@@ -155,10 +147,6 @@ class SysInfoDock:
     def get_cpu_temp(self):
         t=psutil.sensors_temperatures()['coretemp']
         return (t[0][1] + t[1][1]) / 2.0
-        #if self.cpusensor:
-        #    return self.cpusensor.get_value()
-        #else:
-        #    return 0.0
 
     def get_uptime_and_load(self):
         str_uptime = subprocess.check_output(['uptime'])
